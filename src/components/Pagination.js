@@ -1,4 +1,4 @@
-//Pagination.js
+//best Pagination.js
 import React from 'react';
 
 const Pagination = ({ articlesPerPage, totalArticles, paginate }) => {

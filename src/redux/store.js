@@ -1,11 +1,9 @@
-// src/redux//store.js
+//new store.js
 import { configureStore } from '@reduxjs/toolkit';
 import articlesReducer from './articlesSlice';
-
-const store = configureStore({
+// Configure and export the Redux store
+export default configureStore({
   reducer: {
     articles: articlesReducer,
   },
 });
-
-export default store;

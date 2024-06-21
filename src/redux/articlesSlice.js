@@ -1,9 +1,81 @@
-// articlesSlice.js
+//new articlesSlice.js
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+// API key and base URL for fetching articles
+const API_KEY = 'cee16085ae9a4c68a658b03c2425b91e';
+const BASE_URL = 'https://newsapi.org/v2/top-headlines';
+// Thunk for fetching articles
+export const fetchArticles = createAsyncThunk(
+  'articles/fetchArticles',
+  async ({ category }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(BASE_URL, {
+        params: {
+          apiKey: API_KEY,
+          country: 'us',
+          category: category !== 'All' ? category.toLowerCase() : ''
+        }
+      });
+      return response.data.articles.map(article => ({
+        ...article,
+        id: uuidv4() // Generate a unique ID for each article
+      }));
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        return rejectWithValue('Unauthorized: Invalid API key');
+      }
+      return rejectWithValue('Failed to fetch articles');
+    }
+  }
+);
+// Redux slice for managing articles state
+const articlesSlice = createSlice({
+  name: 'articles',
+  initialState: {
+    articles: [],
+    favorites: [],
+    status: 'idle',
+    error: null,
+  },
+  reducers: {
+    addFavorite: (state, action) => {
+      if (!state.favorites.find(article => article.id === action.payload.id)) {
+        state.favorites.push(action.payload);
+      }
+    },
+    removeFavorite: (state, action) => {
+      state.favorites = state.favorites.filter(article => article.id !== action.payload.id);
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchArticles.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchArticles.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.articles = action.payload;
+      })
+      .addCase(fetchArticles.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      });
+  },
+});
+
+export const { addFavorite, removeFavorite } = articlesSlice.actions;
+export default articlesSlice.reducer;
+
+
+
+
+/*// old articlesSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid
 
-const API_KEY = 'cee16085ae9a4c68a658b03c2425b91e';
+const API_KEY = 'cee16085ae9a4c68a658b03c2425b91e';//cee16085ae9a4c68a658b03c2425b91e
 const BASE_URL = 'https://newsapi.org/v2/top-headlines';
 
 export const fetchArticles = createAsyncThunk(
@@ -64,11 +136,11 @@ const articlesSlice = createSlice({
 
 export const { addFavorite, removeFavorite } = articlesSlice.actions;
 
-export default articlesSlice.reducer;
+export default articlesSlice.reducer;*/
 
 
-//best 
-/*import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+/*//best 
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 
@@ -253,85 +325,3 @@ export default articlesSlice.reducer;*/
 
 
 
-/*// src/redux/articlesSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-const API_KEY = 'YOUR_NEWSAPI_KEY'; // Replace with your NewsAPI key
-
-export const fetchArticles = createAsyncThunk(
-  'articles/fetchArticles',
-  async () => {
-    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`);
-    return response.data.articles;
-  }
-);
-
-const articlesSlice = createSlice({
-  name: 'articles',
-  initialState: {
-    articles: [],
-    status: 'idle',
-    error: null
-  },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchArticles.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchArticles.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.articles = action.payload;
-      })
-      .addCase(fetchArticles.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      });
-  }
-});
-
-export default articlesSlice.reducer;*/
-
-
-
-
-
-//https://timesofindia.indiatimes.com/topic/url-link/news
-/*// src/redux/articlesSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-export const fetchArticles = createAsyncThunk(
-  'articles/fetchArticles',
-  async () => {
-    const response = await axios.get('YOUR_NEWS_API_ENDPOINT');
-    return response.data.articles;
-  }
-);
-
-const articlesSlice = createSlice({
-  name: 'articles',
-  initialState: {
-    articles: [],
-    status: 'idle',
-    error: null
-  },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchArticles.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchArticles.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.articles = action.payload;
-      })
-      .addCase(fetchArticles.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      });
-  },
-});
-
-export default articlesSlice.reducer;*/
