@@ -1,0 +1,83 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #000000;
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+header {
+    background-color: #0e3a68;
+    color: rgb(255, 255, 255);
+    padding: 20px 0;
+    text-align: center;
+    font-style: italic;
+    font-size: x-large;
+    font-weight: bold;
+}
+
+header h1 {
+    margin: 0;
+}
+
+/* Article Styles */
+.article-preview {
+    background: rgb(221, 218, 248);
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.article-preview img {
+    max-width: 100%;
+    height: auto;
+}
+
+.article-preview h2 {
+    margin: 10px 0;
+}
+
+.article-preview p {
+    margin: 10px 0;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    margin: 0 5px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+/* Category Filter Styles */
+.category-filter {
+    margin-bottom: 20px;
+}
+
+.category-filter select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
